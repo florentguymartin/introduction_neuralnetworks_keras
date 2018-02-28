@@ -13,9 +13,9 @@ bernoulli = stats.bernoulli(p)
 bernoulli.rvs(10)
 
 def distribution0_jam():
-    return stats.norm.rvs(loc=25,scale=11)
+    return stats.norm.rvs(loc=25,scale=8)
 def distribution0_normal():
-    return stats.norm.rvs(loc=70,scale=20)
+    return stats.norm.rvs(loc=70,scale=7)
 
 def distribution0():
     """Distribution 0."""
@@ -26,40 +26,39 @@ def distribution0():
     else:
         return distribution0_normal(), 'normal'
     
-def distribution1_jam():
+def distribution1_jam(scale1=8,scale2=8):
     """Distribution of slow traffic."""
 #     p=0.5
 #     bernoulli = stats.bernoulli(p)
     if bernoulli.rvs():
-        return stats.norm.rvs(loc=20,scale=8)
+        return stats.norm.rvs(loc=20,scale=scale1)
     else:
-        return stats.norm.rvs(loc=60,scale=8)
+        return stats.norm.rvs(loc=60,scale=scale2)
     
-def distribution1_normal():
+def distribution1_normal(scale1=8,scale2=8):
     """Distribution of normal traffic."""
 #     p=0.5
 #     bernoulli = stats.bernoulli(p)
     if bernoulli.rvs():
-        return stats.norm.rvs(loc=40,scale=8)
+        return stats.norm.rvs(loc=40,scale=scale1)
     else:
-        return stats.norm.rvs(loc=80,scale=8)
+        return stats.norm.rvs(loc=80,scale=scale2)
     
-def distribution1():
+def distribution1(scale=8):
     """Distribution 1."""
 #     p=0.5
 #     bernoulli = stats.bernoulli(p)
     if bernoulli.rvs():
-        return distribution1_jam(), 'slow'
+        return distribution1_jam(scale,scale), 'slow'
     else:
-        return distribution1_normal(),'normal'
+        return distribution1_normal(scale,scale),'normal'
     
-def sample(distribution,n):
-    samples= [distribution() for i in range(n)]
+def sample(distribution,n,scale=8):
+    samples= [distribution(scale) for i in range(n)]
     df = pd.DataFrame(samples,columns=['coordinates','traffic'])
     return df
 
-def plot_sample(distribution,n,size_point=4):
-    data = sample(distribution,n)
+def plot_traffic(data,size_point=4):
     sns.set_context("talk",font_scale=3)
     palette = sns.color_palette("Set1")
     plt.figure(figsize=(20,13))
@@ -68,4 +67,9 @@ def plot_sample(distribution,n,size_point=4):
     ax.set_xlim(0,100)
     ax.set_ylabel('')
     sns.despine(bottom=True,right=False)
+    return None
+
+def plot_sample(distribution,n,size_point=4):
+    data = sample(distribution,n)
+    plot_traffic(data,size_point=4)
     return None

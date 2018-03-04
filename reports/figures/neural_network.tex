@@ -14,11 +14,12 @@
     \tikzstyle{hidden neuron}=[neuron, fill=blue!50];
     \tikzstyle{annot} = [text width=4em, text centered]
 
+
     % Draw the input layer nodes
 %    \foreach \name / \y in {1,...,4}
     \foreach \name / \y in {3}
     % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
-        \node[input neuron, pin=left:Input \#\y] (I-\name) at (0,-\y-0.5) {};
+        \node[input neuron, pin=left:Input ] (I-\name) at (0,-\y-0.5) {};
 
     % Draw the hidden layer nodes
     \foreach \name / \y in {1,...,7}

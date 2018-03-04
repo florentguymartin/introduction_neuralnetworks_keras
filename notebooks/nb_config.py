@@ -6,7 +6,7 @@
 # always reload modules marked with "%aimport"
 # see http://ipython.readthedocs.io/en/stable/config/extensions/autoreload.html?highlight=autoreload
 #%autoreload 2
-
+print('hello Koen')
 import os
 import sys
 

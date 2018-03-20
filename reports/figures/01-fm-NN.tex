@@ -46,23 +46,61 @@
 %    \node[annot,right of=hl] {Output layer};
 %\end{tikzpicture}
 %% End of code
+\def\input_layer{1}
+\def\hidden_layer_0{5}
 
+\def\hdist{2}
 
 \begin{tikzpicture}
 
-\node (input) at (-2,0) {} ;
-\node[draw, circle] (n00) at (0,0) {$x_{0,0}$};
+% plot the input layer
+\foreach \i in {1,...,\input_layer}{
+\node (left_input\i) at (-2, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {};
+\pgfmathsetmacro\j{int(\i -1)}
+\node[draw, circle, minimum size=30pt] (input\i) at (0, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {$x_{0}$};
+\draw[->,>=latex] (left_input\i) -- (input\i);
+}
 
-\foreach \i in {0,...,4}
-  \node[draw, circle] (\i) at (2,2*\i)  {};
-  
-\draw[->] (1) -- (2);
+% plot the first hidden layer
+\foreach \i in {1,...,\hidden_layer_0}{
+\pgfmathsetmacro\j{int(\i -1)}
+\node[draw, circle, minimum size=30pt] (hidden0\i) at (4, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {$x_{1,\j}$};
+    \foreach \k in {1,...,\input_layer}{
+    \draw[->,>=latex] (input\k) -- (hidden0\i);
+    };
+}
 
-\node[draw, circle] (n10) at (4,4) {$x_{1,0}$};
+% plot the second layer
+\node[draw,circle, minimum size=30pt] (output) at (8,0) {$x_2$};
+\foreach \i in {1,...,\hidden_layer_0}{
+\draw[->, >=latex] (hidden0\i) -- (output);
+}
 
-\draw[->, >=latex] (input) -- (n00);
+%plot sigmoid
+\node[draw , circle , minimum size=30pt] (sigmoid) at (10,0) {$x_3$};
+\draw[->, >=latex] (output) -- (sigmoid);
 
-\draw[->,>=latex] (n00) -- (n10);
+\node (outter) at (12,0) {};
+\draw[->, >=latex] (sigmoid) -- (outter);
+
+
+
+%
+%
+%
+%\node (input) at (-2,0) {} ;
+%\node[draw, circle] (n00) at (0,0) {$x_{0,0}$};
+%
+%\foreach \i in {0,...,\hidden_layer_0}
+%  \node[draw, circle] ({\i}) at (2,2*\i)  {};
+%  
+%\draw[->] (1) -- (2);
+%
+%\node[draw, circle] (n10) at (4,4) {$x_{1,0}$};
+%
+%\draw[->, >=latex] (input) -- (n00);
+%
+%\draw[->,>=latex] (n00) -- (n10);
 
 
 \end{tikzpicture}

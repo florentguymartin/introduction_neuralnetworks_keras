@@ -1,0 +1,61 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+
+\usepackage{graphicx}
+%\usepackage{landscape}
+ \usepackage{nopageno}
+
+\begin{document}
+
+
+\def\input_layer{1}
+\def\hidden_layer_0{5}
+\def\hdist{3}
+
+\rotatebox{90}{
+\begin{tikzpicture}
+
+% plot the input layer
+\foreach \i in {1,...,\input_layer}{
+\node (left_input\i) at (-2, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {};
+\pgfmathsetmacro\j{int(\i -1)}
+\node[draw, circle, minimum size=50pt] (input\i) at (0, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {$x$};
+\draw[->,>=latex] (left_input\i) -- (input\i);
+}
+
+% plot the first hidden layer
+\foreach \i in {1,...,\hidden_layer_0}{
+\pgfmathsetmacro\j{int(\i -1)}
+\node[draw, circle, minimum size=50pt, align=center] (hidden0\i) at (4, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {$x_\i :=$ \\ $w_\i x + b_\i$};
+    \foreach \k in {1,...,\input_layer}{
+    \draw[->,>=latex] (input\k) -- (hidden0\i);
+    };
+}
+
+% plot the sigmoid part of the first hidden layer
+\foreach \i in {1,...,\hidden_layer_0}{
+\node[draw, circle, minimum size=50pt, align=center] (hidden_sigmoid\i) at (8, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {$y_\i :=$ \\ $\sigma(x_\i)$};
+\draw[->,>=latex] (hidden0\i) -- (hidden_sigmoid\i);
+}
+
+% plot the second layer
+\node[draw,circle, minimum size=50pt, align = center] (output) at (12,0) {$y :=$ \\ $\sum_{i=1}^5 W_i x_i + B $};
+\foreach \i in {1,...,\hidden_layer_0}{
+\draw[->, >=latex] (hidden_sigmoid\i) -- (output);
+}
+
+%plot sigmoid
+\node[draw , circle , minimum size=50pt] (sigmoid) at (16,0) {$\sigma(y)$};
+\draw[->, >=latex] (output) -- (sigmoid);
+
+\node (outter) at (18,0) {};
+\draw[->, >=latex] (sigmoid) -- (outter);
+
+\end{tikzpicture}
+	\thispagestyle{empty}
+
+}
+
+\end{document}

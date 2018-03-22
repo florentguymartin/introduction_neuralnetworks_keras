@@ -9,17 +9,14 @@
 
 \begin{document}
 
+\rotatebox{90}{
+\begin{tikzpicture}
 
 \def\input_layer{1}
 \def\hidden_layer_0{3}
 \def\hdist{3}
 
-\rotatebox{90}{
-\begin{tikzpicture}
-
-\pgfmathsetmacro\x{-2}
-
-
+\pgfmathsetmacro\x{0}
 
 % plot the input layer
 \foreach \i in {1,...,\input_layer}{
@@ -28,9 +25,9 @@
 \node[draw, circle, minimum size=50pt] (input\i) at (\x+2, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {$x$};
 \draw[->,>=latex] (left_input\i) -- (input\i);
 }
+
 \pgfmathsetmacro\x{\x+2}
 \pgfmathsetmacro\x{\x+4}
-
 
 % plot the first hidden layer
 \foreach \i in {1,...,\hidden_layer_0}{
@@ -63,11 +60,70 @@
 \node[draw , circle , minimum size=50pt] (sigmoid) at (\x,0) {$\sigma(y)$};
 \draw[->, >=latex] (output) -- (sigmoid);
 
-\node (outter) at (18,0) {};
+\node (outter) at (\x+2,0) {};
 \draw[->, >=latex] (sigmoid) -- (outter);
 
 \end{tikzpicture}
-%	\thispagestyle{empty}
+
+}
+
+\newpage
+
+% neural netwark with no arthmetic/algebraic expressions in the nodes
+
+\def\input_layer{1}
+\def\hidden_layer_0{4}
+\def\hdist{3}
+
+\rotatebox{90}{
+\begin{tikzpicture}
+
+\pgfmathsetmacro\x{0}
+
+% plot the input layer
+\foreach \i in {1,...,\input_layer}{
+\node (left_input\i) at (\x, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {};
+\node[draw, circle, minimum size=50pt] (input\i) at (\x+2, {\i*\hdist-(\input_layer + 1)*\hdist/2}) {};
+\draw[->,>=latex] (left_input\i) -- (input\i);
+}
+
+\pgfmathsetmacro\x{\x+5}
+
+% plot the first hidden layer
+\foreach \i in {1,...,\hidden_layer_0}{
+%\pgfmathsetmacro\j{int(\i -1)}
+\node[draw, circle, minimum size=50pt, align=center] (hidden0\i) at (\x, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {};
+    \foreach \k in {1,...,\input_layer}{
+    \draw[->,>=latex] (input\k) -- (hidden0\i);
+    };
+}
+
+\pgfmathsetmacro\x{\x+2.5}
+
+% plot the sigmoid part of the first hidden layer
+\foreach \i in {1,...,\hidden_layer_0}{
+\node[draw, circle, minimum size=50pt, align=center , draw=blue] (hidden_sigmoid\i) at (\x, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {};
+\draw[->,>=latex] (hidden0\i) -- (hidden_sigmoid\i);
+}
+
+\pgfmathsetmacro\x{\x+3}
+
+% plot the second layer
+\node[draw,circle, minimum size=50pt, align = center] (output) at (\x,0) {};
+\foreach \i in {1,...,\hidden_layer_0}{
+\draw[->, >=latex] (hidden_sigmoid\i) -- (output);
+}
+
+\pgfmathsetmacro\x{\x+3}
+
+%plot sigmoid
+\node[draw , circle , minimum size=50pt , draw = blue] (sigmoid) at (\x,0) {};
+\draw[->, >=latex] (output) -- (sigmoid);
+
+\node (outter) at (\x+2,0) {};
+\draw[->, >=latex] (sigmoid) -- (outter);
+
+\end{tikzpicture}
 
 }
 

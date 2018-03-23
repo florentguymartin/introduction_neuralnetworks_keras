@@ -42,14 +42,14 @@
 
 % plot the sigmoid part of the first hidden layer
 \foreach \i in {1,...,\hidden_layer_0}{
-\node[draw, circle, minimum size=50pt, align=center] (hidden_sigmoid\i) at (\x, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {$y_\i :=$ \\ $\sigma(x_\i)$};
+\node[draw, circle, minimum size=50pt, align=center, draw = blue] (hidden_sigmoid\i) at (\x, {\i*\hdist-(\hidden_layer_0 + 1)*\hdist/2}) {$y_\i :=$ \\ $\sigma(x_\i)$};
 \draw[->,>=latex] (hidden0\i) -- (hidden_sigmoid\i);
 }
 
 \pgfmathsetmacro\x{\x+4}
 
 % plot the second layer
-\node[draw,circle, minimum size=50pt, align = center] (output) at (\x,0) {$y :=$ \\ $\sum_{i=1}^5 W_i y_i + B $};
+\node[draw,circle, minimum size=50pt, align = center] (output) at (\x,0) {$y :=$ \\ $\sum_{i=1}^3 W_i y_i + B $};
 \foreach \i in {1,...,\hidden_layer_0}{
 \draw[->, >=latex] (hidden_sigmoid\i) -- (output);
 }
@@ -57,7 +57,7 @@
 \pgfmathsetmacro\x{\x+4}
 
 %plot sigmoid
-\node[draw , circle , minimum size=50pt] (sigmoid) at (\x,0) {$\sigma(y)$};
+\node[draw , circle , minimum size=50pt , draw = blue] (sigmoid) at (\x,0) {$\sigma(y)$};
 \draw[->, >=latex] (output) -- (sigmoid);
 
 \node (outter) at (\x+2,0) {};

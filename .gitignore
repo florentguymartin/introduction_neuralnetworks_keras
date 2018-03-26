@@ -4,6 +4,7 @@ __pycache__/
 
 # latex files
 *.aux
+*.log
 *.gz
 
 #.DS_Store

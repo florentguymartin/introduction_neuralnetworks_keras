@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 
+# latex files
+*.aux
+*.gz
+
 #.DS_Store
 .DS_Store
 

@@ -1,16 +1,21 @@
+### DON'T FORGET TO RUN THE FIRST CELL OF THE NOTEBOOK ###
+
 Hello everyone
-First I would like to thank the orgaizers of PyData Munich and super Python talks and in particular Nick del Grosso who spent a lot of time and energy hhelping me improve the quality of this presentation.
+First I would like to thank the orgaizers of PyData Munich and super Python talks and in particular 
+Nick del Grosso who got much involved in the last weeks and  help me to improve the quality of this presentation.
 
-Before starting I want to say, please, if something is not clear during this talk, please ask me a question and I'll be happy to try to answer it.
+Before starting I would like to encourage all of you 
+to interupt me and ask a question something is not clear during this talk,
+or if you have a remark.
 
-I want to introduce you to neural networks and see how to use them with the Python library Keras.
+So the goal of the 45 minutes is to introduce neural networks and see how to use them with the Python library Keras.
 
 First an overall introduction: 
 
 What is machine learning? 
-It is a field of computer where one solves a specific task, and instaed of 
-developping a classical algorithm to solve this task, one instead chooses a model. 
-And the important thing is that the model you choose depends on some  parmaters 
+It is a field of computer where one solves a given task, and instaed of 
+developping a classical algorithm to solve this task, one  chooses a model. 
+And the important thing is that the model   depends on some  parameters 
 (in most cases those parameters are numbers).
 And to use the model, 
 you need to fix the parameters of the model.
@@ -19,96 +24,149 @@ To do that, the strategy of machine learning is to use some data
 and after seeing all the data, your model
 chooses the best parameters that fit the data.
 
-Now, neural networks are models which are used in machine learning.
-And I want to say that neural networks are just one type of models for machine learning 
-but there are many others 
+Now, neural networks are just a family ofmodels which are used in machine learning.
+And I want to say that neural networks are just one example of models for machine learning 
+but there are many others models 
 (for instance Decision trees, support vector machines, naive Bayes classifiers and so on).
 
 And Keras is a Python library which allows to use neural networks.
 
-So the goal of this presentation is to takle simple problem (flower classification) 
+So the goal of this presentation is to solve a  simple problem (flower classification) 
 using Keras and try to understand how this works.
 
-Before starting and want to anticipate a make a sketchy overall of what we'll see.
+Before starting I want to anticipate a make a sketchy overall of what we'll see.
 Here on the top right you see a graphical representation of a neural network.
 The idea is that you've an input (which is a number) and you want an output (which is also a number) and to make the computation of the output there are some intermediate nodes. 
 One calls this layers in the middle some hidden layers (in the sense that they are not part of the input 
-nor of the output) but still play a crucial in the computation.
+nor of the output) but still are crucial in the computation.
 
 And I should say that the parameters are used in the intermediate nodes.
-On the left side, what you see is a neural network which is simplerm and this very kind of neural network have there own theory, and their own names: namely they are called logistic regression classifiers.
+This means that each node in this computational graph depends 
+on some parameters. 
+On the left side, what you see is a neural network which is simpler and this very kind of neural network have there own theory, and their own names: namely they are called logistic regression classifiers.
 So actually in this talk, we'll first investigate logistic regression (because it's 
 simpler to understand) and then we'll move to more complicated neural networks like on the right.
 And the curve you see on the left, is the typical kind of curve a logistic regression 
 classifier can learn. 
-And the curve on the right as we'll see on the right is a typical example of a curve that  can't be learnt from a logistic regression classifier but can be learnt by a general neural network like this one.
+And the curve on the right as we'll see t is a typical example of a curve that  can't be learnt from a logistic regression classifier but can be learnt by a general neural network like this one.
 
 The plan will be as follow:
 there will be 3 parts. 
 The first part will be about logistic regression.
-First we'll investigate a prblem of flower classificatin, for that we'll use the socalled iris dataset.
-Then we'll first implement our first logistic regression using scikit-learn which is 
-a general machine learning library for python.
-and we'll finally use Keras to implement a logistic regression
+First we'll investigate a problem of flower classificatin, for that we'll use the socalled iris dataset.
+Then we'll  implement our first logistic regression using scikit-learn which is 
+a very general  library to do machine learning with python.
+And we'll finally use Keras to implement a logistic regression.
 
-In the second part we'll talk about gradient descent which is the technique that neural networks use to fit the parmaeters of the model to the data.
+In the second part we'll talk about gradient descent which is 
+the technique that neural networks use to fit the parmaeters of the model with the data.
 For that we'll talk about optimization, and then about cross entropy loss function.
 
 And in the third and last part, we'll implement with Keras a neural network with 
 a hidden layer like we saw on the previous slide.
 For that we'll change a little bit the problem to solve, then 
-try to use logistic regression, but it won't work we'll try to understand why and what are the limitations of logisstic regression, 
+try to use logistic regression, but it won't work we'll try to understand why and what are the limitations of logistic regression, 
 and finally we'll be happy to see that neural network with a hidden can solve our problem.
 
-Before starting, I will import python libraries we will need.
+Before starting, I will import the python libraries we will need.
 Numpy which is used to manipulate arrays of numbers 
-Matplotlib which is a library to plot 2-dimensional graphs
+and do some numerical computations, tehn
+Matplotlib which is a library to plot 2-dimensional graphs, then 
 pandas which allows to manipulate  datasets
-and seaborn which is a vizualisation library which we use on top of matplotlib and 
+and finally seaborn which is a vizualisation library which we use on top of matplotlib and 
 allows to improve the quality of the plots.
 
-It's time to start the first part about logistic regression.
-For that we'll ivestigate a  flower classification problem and use for that 
+Let's now start the first part about logistic regression.
+As you'll see, logistic regression is an example among 
+many others of neural networks, and one could say that 
+logistic regression is the simplest neural network one can build.
+And I believe that before seeing the general notion of neural networks, 
+it is better to get a first contact with logistic regression. 
+
+
+For that we'll ivestigate a  flower classification problem and use  
 a famous data set called the iris dataset.
 
 It can be loaded directly with seaborn using the fonction load_dataset.
-Now the variable iris is a dataframe and let's see 5 random rows of it.
-For that I use the method sample from the dataframe iris and ask to see 5 random rows
+Now the variable iris is a dataframe and we can  see 5 random rows of it 
+using the method sample of the dataframe iris.
 
+Each row in the dataframe is a sample of an iris.
 We have 5 columns : sepal length, sepal width, petal length and petal width and 
-a lst colums that gives the species of the row.
-Let's look at the shape of the datframe iris: 
-it has 150 rows and 5 columns as we already know. 
-Just to be clear this dataset contains data about 150 flowers of genus iris. 
+a last colums that gives the species of the sample 
+corresponding to the row.
+We can see the number of rows and colums  of the datframe using its method shape: 
+it has 150 rows (which means for us 150 samples) 
+and 5 columns (which we had already seen above). 
 And we can see how species are distributed in this dataset usnig the 
 method value_counts on the column species, 
 and we see that there are in total 3 species : setosa, versicolor and virginic and that we have 50 samples of each.
 
-In case you wonder, here are pictures of a setosa, versicolor and virginica, 
-these are very nice flowers.
-With seaborn we can draw a paiplot of the features of the various properties of the plants, where in blue you have setosa, in green versicolor and in red virginica.
+In case you wonder what an iris is, or what a setoss, a versicolor or a virginica is, here are pictures of
+each of these species.
+
+With seaborn we can draw a pairplot of
+the dataset, 
+where in blue you have setosa, in green versicolor and in red virginica. 
+On the diagonal, we have histograms of the 4 properties 
+(petal widt, petal length, and so on) and 
+out of the diagonal, we have scatter plots between two 
+of the features (for instance a scatter plot of the petal length verus petal width).
 
 Problem we'll try to solve is the following: 
-I give you as an input the petal width of an iris plant.
-And I want as an ouput an answer to the question: is the plant a virginica?
+if a give you the petal width of a sample, 
+I want to know if the sample is of the species virginica.
+In other words, the  input is  the petal width of 
+an iris sample.
+The question is: is the sample's species virginica or not?
+Hence, the ouput an answer to the question: is the plant a virginica?
 The anser could be yes (or 1 if we want a number representation) or the answer 
 could be False (or equivalently 0).
 
-To work on this we'll ad a column called 'is_virginicia' to our dataset, and the value of the column is 0 if the plant is not a virginica and 1 if it is  a virginca.
-And we can call the method sample and see 5 random samples and check that we've indeed added that column.
+To work on this we'll ad a column called 'is_virginicia' to our dataset, and the value of the column will be 
+0 if the plant is not a virginica and 1 if it is  a virginca.
+And we can call the method sample and see 5 random samples and
+see the new column 'is_virginica'.
 
 To answer that question, it might be good to plot a histogram of the petal width
-To do that we can use the method hist (for histogram) from a groupby object, and we add a legend and we get that
-here on the x-axis we have the petal width, and on the y-axis, how many samples in our dataset have this petalwidth, and in green we have virginica samples while in blue we have non virginica.
+To do that we can use the method hist (for histogram) of a groupby objecti.
+To make the histogram nice,  we add a legend which 
+will plot the bins of the histogram with different colors
+for the species depending on being of the species virginica or not, 
+and we label the x-axis with the 'petal width', 
+and we label the y-axis number of sample.
+The histogram we get is the petal width on the x-axis,
+, on the y-axis, how many samples in our dataset have this petalwidth, and in green we have virginica samples while in blue we have non virginica.
 
-What's clear from this histogram is that on the left side, so for values lower than 
-1.3, the answer is False/no, it's not vifginica and we want to give it the value 0 
-and when the value of the petal width is high enough freater than 1.8 the anser is yes, which we represent by the value 1.
+What's clear from this histogram is that on the right side, 
+we have green bins, hence
+the species of the samples is virginica, 
+while on the left side, we have blue bins, 
+samples are not virginica
+More precisely, if we want to answer our problem, 
+namely answering the question 
+'is the iris sample of the species virginica, for values lower than 
+1.3, the answer is False/no/0,
+and when the petal width is greater than 1.8 the answer is yes it is virginica,
+so the output is True or equivalently 1.
+
+So just from this diagram, we can start trying to solve our problem, and we'll draw our answer using a dotted 
+red curve.
+From the analysis we already made 
+for petal width smaller than 1.3 the anser is 0 
+(keep in mind that 0 = False)
+and for petal width values greater than 1.7, 
+the anser is True which we numerically represent with 1).
 
 But in between it's not so clear.
-So one natural possibility here would be to draw a line to join these two partial curves.
+For instance when the petal width is 1.5 there are as many samples which are virginica than not virginica.
+So I would say that there is no obvious answer for such values.
+So one natural possibility here would be to draw a line to join these two partial dotted red curves we already have.
+We would get that for instance. 
 
-That looks like a reasonable guess, but could also have tried to make something smoother like that: here it's again clearly 0 so false on left, and 1 so true on the right but the difference is that the transition is very smooth.
+That looks like a reasonable guess, but could also have tried to make something smoother like that: 
+with this solution to the problem,  the 
+output is again clearly 0 so false on left, and 1 so true on the right but the difference is that the transition is very smooth.
 
 What we did so far was trying to solve the problem using our intuition, so now let's do this using Logistic regression has I promised it earlier.
 

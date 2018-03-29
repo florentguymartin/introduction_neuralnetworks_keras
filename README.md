@@ -6,6 +6,7 @@ It uses the iris dataset.
 
 The talk consists of the following [jupyter notebook](./notebooks/talk-nn-keras.ipynb) which was conceived to be run with [RISE](http://rise.readthedocs.io/en/latest/).
 
-The figures used in the notebook can be found in ./figures/img/ and were generated  using Latex or matplotlib with source files which are in ./figures/src/
+The figures used in the notebook can be found in [./figures/img/](./figures/img/) and were generated  using Latex or matplotlib with source files which are in [./figures/src/](./figures/src/).
 
-To run the notebook faster some datas in [./data/](./data/)
+
+To run the notebook faster some datas are in [./data/](./data/)
